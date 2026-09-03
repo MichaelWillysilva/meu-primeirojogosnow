@@ -10,7 +10,6 @@
   <a href="#about"><strong>About</strong></a> ·
   <a href="#how-to-play"><strong>How to Play</strong></a> ·
   <a href="#tech"><strong>Tech</strong></a>
-  <a href="#author"><strong>Author</strong></a>
 </p>
 <br/>
 
