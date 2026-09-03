@@ -6,13 +6,6 @@
 <p align="center">
   A skiing game created with React and HTML5 Canvas.
 </p>
-
-<p align="center">
-  <a href="https://v0.dev/community/we-re-snow-back-P3zKfFoshCq">
-    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/open-in-v0-button-ZKuXSWof756tbZD6vq9OV8Xq5pZS66.svg" alt="Open in v0" width="120" />
-  </a>
-</p>
-
 <p align="center">
   <a href="#about"><strong>About</strong></a> ·
   <a href="#how-to-play"><strong>How to Play</strong></a> ·
