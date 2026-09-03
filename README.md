@@ -1,7 +1,3 @@
-<a href="https://v0.dev/community/we-re-snow-back-P3zKfFoshCq">
-  <img alt="Snow Willy" src="<img width="1200" height="750" alt="image" src="https://github.com/user-attachments/assets/2424638f-6a20-48b9-a233-75742d926c31" />
-![Uploading image.png…]()
-">
   <h1 align="center">Snow Willy</h1>
 </a>
 
