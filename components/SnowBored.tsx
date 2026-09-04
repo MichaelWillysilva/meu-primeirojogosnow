@@ -423,14 +423,14 @@ export default function SnowBored() {
       {/* ✍️ Rodapé Personalizado */}
       <footer className="mt-6 text-[10px] md:text-xs text-slate-400 flex items-center gap-2">
         <span>🎮</span> 
-        <span>Editado por</span>
+        <span>Desenvolvido por</span>
         <a 
           href="https://github.com"
           target="_blank" 
           rel="noopener noreferrer" 
           className="text-cyan-400 hover:underline hover:text-cyan-300 font-bold"
         >
-          Michael Willy
+          MwS
         </a> 
         <span>🚀</span>
       </footer>
