@@ -58,11 +58,7 @@ export default function SnowBored() {
     bgAudioRef.current.volume = 0.4
 
     jumpAudioRef.current = new Audio('/jump.mp3')
-    jumpAudioRef.current.volume = 1
-    const loseAudio = new Audio('/gameover.mp3')
-loseAudio.volume = 0.5
-if (isMuted) loseAudio.muted = true
-loseAudio.play().catch(() => {})
+    jumpAudioRef.current.volume = 0.5
 
     return () => {
       if (bgAudioRef.current) bgAudioRef.current.pause()
@@ -74,21 +70,18 @@ loseAudio.play().catch(() => {})
     if (jumpAudioRef.current) jumpAudioRef.current.muted = isMuted
   }, [isMuted])
 
-    const startMovingUp = () => {
+  const startMovingUp = () => {
     if (!gameStateRef.current.isGameOver) {
       gameStateRef.current.player.isMovingUp = true
-      // Toca APENAS o som de pulo/subida
       if (jumpAudioRef.current) {
         jumpAudioRef.current.currentTime = 0
         jumpAudioRef.current.play().catch(() => {})
       }
-      // Toca a música de fundo
       if (bgAudioRef.current && bgAudioRef.current.paused) {
         bgAudioRef.current.play().catch(() => {})
       }
     }
   }
-
 
   const stopMovingUp = () => {
     if (!gameStateRef.current.isGameOver) {
@@ -140,6 +133,7 @@ loseAudio.play().catch(() => {})
     }
     setScore(0)
     setGameOver(false)
+    setGameTime(0)
     if (bgAudioRef.current) {
       bgAudioRef.current.currentTime = 0
       bgAudioRef.current.play().catch(() => {})
@@ -297,20 +291,17 @@ loseAudio.play().catch(() => {})
           })
         }
 
-                if (checkCollision()) {
+        if (checkCollision()) {
           gameStateRef.current.isGameOver = true
           setGameOver(true)
           setGameTime(Math.floor((Date.now() - gameStateRef.current.startTime) / 1000))
-          
           if (bgAudioRef.current) bgAudioRef.current.pause()
 
-          // 🔊 Toca o som de derrota APENAS quando bater!
           const loseAudio = new Audio('/gameover.mp3')
           loseAudio.volume = 0.5
           if (isMuted) loseAudio.muted = true
           loseAudio.play().catch(() => {})
 
-          // Lógica de Recorde
           const currentFinalScore = gameStateRef.current.score
           const savedHighScore = localStorage.getItem('snowbored_highscore')
           const currentHighScore = savedHighScore ? parseInt(savedHighScore, 10) : 0
@@ -350,6 +341,8 @@ loseAudio.play().catch(() => {})
       cancelAnimationFrame(animationFrameId)
     }
   }, [])
+  const gameStarted = score > 0;
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 font-['Press_Start_2P'] text-white select-none">
       
@@ -368,38 +361,64 @@ loseAudio.play().catch(() => {})
       </div>
 
       {/* Área Principal do Jogo */}
-      <div 
-        className="relative border-4 border-white shadow-2xl rounded overflow-hidden touch-none"
-        onMouseDown={startMovingUp}
-        onMouseUp={stopMovingUp}
-        onTouchStart={(e) => { e.preventDefault(); startMovingUp() }}
-        onTouchEnd={(e) => { e.preventDefault(); stopMovingUp() }}
-      >
+      <div className="relative border-4 border-white shadow-2xl rounded overflow-hidden">
         <canvas
           ref={canvasRef}
           width={GAME_CONSTANTS.CANVAS_WIDTH}
           height={GAME_CONSTANTS.CANVAS_HEIGHT}
-          className="max-w-full h-auto block"
+          className="max-w-full h-auto block touch-none"
+          onMouseDown={startMovingUp}
+          onMouseUp={stopMovingUp}
+          onMouseLeave={stopMovingUp}
+          onTouchStart={(e) => { e.preventDefault(); startMovingUp() }}
+          onTouchEnd={(e) => { e.preventDefault(); stopMovingUp() }}
         />
 
-        {/* Instrução Flutuante */}
-        {!gameOver && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] md:text-xs text-slate-800 bg-white/70 px-3 py-1 rounded text-center pointer-events-none">
+        {/* Instrução Flutuante - Some quando o jogo começa */}
+        {!gameStarted && !gameOver && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] md:text-xs text-slate-800 bg-white/70 px-3 py-1 rounded text-center pointer-events-none animate-bounce">
             {isMobile ? 'Toque e segure na tela para subir' : 'Segure ESPAÇO para subir'}
           </div>
         )}
 
         {/* Tela de Game Over */}
         {gameOver && (
-          <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-center p-4">
+          <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-center p-4 z-50">
             <h2 className="text-red-500 text-2xl md:text-4xl mb-4 animate-pulse">GAME OVER</h2>
             <p className="text-sm md:text-lg mb-2">Pontuação Final: <span className="text-cyan-400">{score}</span></p>
             <p className="text-xs md:text-sm text-slate-400 mb-6">Tempo de Jogo: {gameTime}s</p>
             <button
-              onClick={restartGame}
-              className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-6 py-3 rounded text-sm md:text-base border-b-4 border-emerald-700 active:border-b-0 active:translate-y-1 transition-all"
+              onClick={(e) => {
+                e.stopPropagation();
+                restartGame();
+              }}
+              onTouchEnd={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                restartGame();
+              }}
+              className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-6 py-3 rounded text-sm md:text-base border-b-4 border-emerald-700 active:border-b-0 active:translate-y-1 transition-all cursor-pointer"
             >
-              Bora mais uma vez?!
+              JOGAR DE NOVO
+            </button>
+          </div>
+        )}
+      </div>
+
+        {/* Tela de Game Over */}
+        {gameOver && (
+          <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-center p-4 z-50">
+            <h2 className="text-red-500 text-2xl md:text-4xl mb-4 animate-pulse">GAME OVER</h2>
+            <p className="text-sm md:text-lg mb-2">Pontuação Final: <span className="text-cyan-400">{score}</span></p>
+            <p className="text-xs md:text-sm text-slate-400 mb-6">Tempo de Jogo: {gameTime}s</p>
+            <button
+              onClick={(e) => {
+                e.stopPropagation(); // Impede o clique de fazer o boneco subir após o reinício
+                restartGame();
+              }}
+              className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-6 py-3 rounded text-sm md:text-base border-b-4 border-emerald-700 active:border-b-0 active:translate-y-1 transition-all cursor-pointer"
+            >
+              JOGAR DE NOVO
             </button>
           </div>
         )}
@@ -408,7 +427,7 @@ loseAudio.play().catch(() => {})
       {/* ✍️ Rodapé Personalizado */}
       <footer className="mt-6 text-[10px] md:text-xs text-slate-400 flex items-center gap-2">
         <span>🎮</span> 
-        <span>Criado por</span>
+        <span>Editado por</span>
         <a 
           href="https://github.com"
           target="_blank" 
