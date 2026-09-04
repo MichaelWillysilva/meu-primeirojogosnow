@@ -360,7 +360,7 @@ export default function SnowBored() {
         </button>
       </div>
 
-            {/* Área Principal do Jogo */}
+                  {/* Área Principal do Jogo */}
       <div className="relative border-4 border-white shadow-2xl rounded overflow-hidden">
         <canvas
           ref={canvasRef}
@@ -377,7 +377,7 @@ export default function SnowBored() {
         {/* Instrução Flutuante - Some quando o jogo começa */}
         {!gameStarted && !gameOver && (
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] md:text-xs text-slate-800 bg-white/70 px-3 py-1 rounded text-center pointer-events-none animate-bounce">
-            {isMobile ? 'Toque e segure na tela para subir' : 'Segure ESPAÇO para subir'}
+            {isMobile ? 'Toque no botão ⬆️ para subir' : 'Segure ESPAÇO para subir'}
           </div>
         )}
 
@@ -405,20 +405,17 @@ export default function SnowBored() {
         )}
       </div>
 
-      {/* ✍️ Rodapé Personalizado */}
-      <footer className="mt-6 text-[10px] md:text-xs text-slate-400 flex items-center gap-2">
-        <span>🎮</span> 
-        <span>Editado por</span>
-        <a 
-          href="https://github.com"
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-cyan-400 hover:underline hover:text-cyan-300 font-bold"
+      {/* Botão de controle visível (principalmente para mobile) */}
+      {!gameOver && (
+        <button
+          onMouseDown={startMovingUp}
+          onMouseUp={stopMovingUp}
+          onMouseLeave={stopMovingUp}
+          onTouchStart={(e) => { e.preventDefault(); startMovingUp() }}
+          onTouchEnd={(e) => { e.preventDefault(); stopMovingUp() }}
+          onContextMenu={(e) => e.preventDefault()}
+          className="mt-4 select-none touch-none bg-cyan-500 hover:bg-cyan-400 active:bg-cyan-600 text-black font-bold w-20 h-20 md:w-24 md:h-24 rounded-full text-3xl border-b-4 border-cyan-700 active:border-b-0 active:translate-y-1 transition-all shadow-lg flex items-center justify-center"
         >
-          Michael Willy
-        </a> 
-        <span>🚀</span>
-      </footer>
-    </div>
-  )
-}
+          ⬆️
+        </button>
+      )}
