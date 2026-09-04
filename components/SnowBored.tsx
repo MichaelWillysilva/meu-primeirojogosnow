@@ -360,7 +360,7 @@ export default function SnowBored() {
         </button>
       </div>
 
-      {/* Área Principal do Jogo */}
+            {/* Área Principal do Jogo */}
       <div className="relative border-4 border-white shadow-2xl rounded overflow-hidden">
         <canvas
           ref={canvasRef}
@@ -395,25 +395,6 @@ export default function SnowBored() {
               onTouchEnd={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                restartGame();
-              }}
-              className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-6 py-3 rounded text-sm md:text-base border-b-4 border-emerald-700 active:border-b-0 active:translate-y-1 transition-all cursor-pointer"
-            >
-              JOGAR DE NOVO
-            </button>
-          </div>
-        )}
-      </div>
-
-        {/* Tela de Game Over */}
-        {gameOver && (
-          <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-center p-4 z-50">
-            <h2 className="text-red-500 text-2xl md:text-4xl mb-4 animate-pulse">GAME OVER</h2>
-            <p className="text-sm md:text-lg mb-2">Pontuação Final: <span className="text-cyan-400">{score}</span></p>
-            <p className="text-xs md:text-sm text-slate-400 mb-6">Tempo de Jogo: {gameTime}s</p>
-            <button
-              onClick={(e) => {
-                e.stopPropagation(); // Impede o clique de fazer o boneco subir após o reinício
                 restartGame();
               }}
               className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-6 py-3 rounded text-sm md:text-base border-b-4 border-emerald-700 active:border-b-0 active:translate-y-1 transition-all cursor-pointer"
